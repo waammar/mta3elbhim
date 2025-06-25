@@ -77,6 +77,10 @@
 <body>
   <img id="logo" src="mta3elbhim_masquotte.png" alt="Mascotte Mta3 el Bhim" />
   <div id="tagline">Haw jeyek</div>
+  <div style="margin-top:1rem;">
+    <input id="rimeInput" type="text" placeholder="het kelma ..." style="padding:0.5rem;border-radius:5px;border:1px solid #ccc;font-size:1rem;">
+    <button id="rimeBtn" style="padding:0.5rem 1rem;margin-left:0.5rem;border-radius:5px;border:none;background:#222;color:#fff;font-weight:bold;cursor:pointer;">Mta3 El Bhim</button>
+  </div>
   <div id="phraseBox">...</div>
   <footer id="credits">Sa7eb El Fekra: Tayeb Ja3ba (son coeur est fragile)<br>Owner: Hellfest Tunisian Group</footer>
 
@@ -87,18 +91,63 @@
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impucm1ocmp0bmZoc2tydWVsZ3p2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4NDE0NjEsImV4cCI6MjA2NjQxNzQ2MX0.qO_kBqGe9XczyIJZOEhKXk_9-l0njLYjwKxGfjQhtSM';
 
     async function fetchPhrase() {
-      const res = await fetch(`${supabaseUrl}/rest/v1/phrases?select=*`, {
-        headers: {
-          'apikey': supabaseKey,
-          'Authorization': `Bearer ${supabaseKey}`
+      try {
+        const res = await fetch(`${supabaseUrl}/rest/v1/phrases?select=*`, {
+          headers: {
+            'apikey': supabaseKey,
+            'Authorization': `Bearer ${supabaseKey}`
+          }
+        });
+        if (!res.ok) throw new Error('Erreur lors de la récupération');
+        const dataArr = await res.json();
+        if (Array.isArray(dataArr) && dataArr.length > 0) {
+          const data = dataArr[Math.floor(Math.random() * dataArr.length)];
+          document.getElementById('phraseBox').innerHTML = `<strong>Mta3 El Bhim</strong> ${data.text}`;
+        } else {
+          document.getElementById('phraseBox').textContent = "Aucune phrase trouvée.";
         }
-      });
-      const dataArr = await res.json();
-      if (dataArr && dataArr.length > 0) {
-        const data = dataArr[Math.floor(Math.random() * dataArr.length)];
-        document.getElementById('phraseBox').innerHTML = `<strong>Mta3 El Bhim</strong> ${data.text}`;
+      } catch (e) {
+        document.getElementById('phraseBox').textContent = "Erreur de connexion au serveur.";
       }
     }
+
+    async function fetchRimePhrase(mot) {
+      document.getElementById('phraseBox').textContent = "Recherche...";
+      try {
+        const res = await fetch(`${supabaseUrl}/rest/v1/phrases?select=*`, {
+          headers: {
+            'apikey': supabaseKey,
+            'Authorization': `Bearer ${supabaseKey}`
+          }
+        });
+        if (!res.ok) throw new Error('Erreur lors de la récupération');
+        const dataArr = await res.json();
+        if (Array.isArray(dataArr) && dataArr.length > 0) {
+          // Rime simple : on prend les 2 dernières lettres du mot
+          const end = mot.trim().toLowerCase().slice(-2);
+          const rimeArr = dataArr.filter(d => d.text && d.text.trim().toLowerCase().slice(-2) === end);
+          if (rimeArr.length > 0) {
+            const data = rimeArr[Math.floor(Math.random() * rimeArr.length)];
+            document.getElementById('phraseBox').innerHTML = `<strong>Mta3 El Bhim</strong> ${data.text}`;
+          } else {
+            document.getElementById('phraseBox').textContent = "Aucune phrase ne rime avec ce mot.";
+          }
+        } else {
+          document.getElementById('phraseBox').textContent = "Aucune phrase trouvée.";
+        }
+      } catch (e) {
+        document.getElementById('phraseBox').textContent = "Erreur de connexion au serveur.";
+      }
+    }
+
+    document.getElementById('rimeBtn').addEventListener('click', () => {
+      const mot = document.getElementById('rimeInput').value;
+      if (mot.trim().length < 2) {
+        document.getElementById('phraseBox').textContent = "Entre au moins 2 lettres.";
+        return;
+      }
+      fetchRimePhrase(mot);
+    });
 
     fetchPhrase();
   </script>

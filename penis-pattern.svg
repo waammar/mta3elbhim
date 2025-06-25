@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80">
+  <defs>
+    <pattern id="penisPattern" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
+      <g transform="translate(14,10)">
+        <!-- Shaft -->
+        <rect x="20" y="0" width="20" height="35" rx="10" fill="#f4a8be" />
+        <!-- Glans (rounded top) -->
+        <circle cx="30" cy="0" r="10" fill="#f4a8be" />
+        <!-- Testicles -->
+        <circle cx="20" cy="35" r="10" fill="#f4a8be" />
+        <circle cx="40" cy="35" r="10" fill="#f4a8be" />
+      </g>
+    </pattern>
+  </defs>
+  <rect x="0" y="0" width="100%" height="100%" fill="url(#penisPattern)"/>
+</svg>

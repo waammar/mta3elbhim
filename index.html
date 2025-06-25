@@ -49,9 +49,22 @@
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
     }
 
+    #phraseBox {
+      margin-top: 1rem;
+      padding: 1rem 1.5rem;
+      background: rgba(255, 255, 255, 0.8);
+      color: #000;
+      font-weight: 500;
+      font-size: 1.1rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      text-align: center;
+      max-width: 90%;
+    }
+
     #credits {
-      margin-top: 2rem;
-      font-size: 1rem;
+      margin-top: 4rem;
+      font-size: 0.7rem;
       color: #000;
       font-weight: 600;
       text-align: center;
@@ -64,6 +77,30 @@
 <body>
   <img id="logo" src="mta3elbhim_masquotte.png" alt="Mascotte Mta3 el Bhim" />
   <div id="tagline">Haw jeyek</div>
+  <div id="phraseBox">...</div>
   <footer id="credits">Sa7eb El Fekra: Tayeb Ja3ba (son coeur est fragile)<br>Owner: Hellfest Tunisian Group</footer>
+
+  <script type="module">
+    // Example Supabase fetch phrase
+    // Replace with your own Supabase project URL and anon key
+    const supabaseUrl = 'https://jnrmhrjtnfhskruelgzv.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impucm1ocmp0bmZoc2tydWVsZ3p2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4NDE0NjEsImV4cCI6MjA2NjQxNzQ2MX0.qO_kBqGe9XczyIJZOEhKXk_9-l0njLYjwKxGfjQhtSM';
+
+    async function fetchPhrase() {
+      const res = await fetch(`${supabaseUrl}/rest/v1/phrases?select=*`, {
+        headers: {
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`
+        }
+      });
+      const dataArr = await res.json();
+      if (dataArr && dataArr.length > 0) {
+        const data = dataArr[Math.floor(Math.random() * dataArr.length)];
+        document.getElementById('phraseBox').innerHTML = `<strong>Mta3 El Bhim</strong> ${data.text}`;
+      }
+    }
+
+    fetchPhrase();
+  </script>
 </body>
 </html>
